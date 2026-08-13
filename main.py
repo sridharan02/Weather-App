@@ -2,7 +2,10 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import requests
+from fastapi.staticfiles import StaticFiles
 
+# If your files are in the root directory:
+app.mount("/static", StaticFiles(directory="."), name="static")
 app = FastAPI(title="Global Weather API Proxy")
 
 # Enable CORS so your frontend can communicate with the backend
