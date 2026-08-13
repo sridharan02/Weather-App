@@ -1,13 +1,14 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-import requests
 from fastapi.staticfiles import StaticFiles
+import requests
 
-# If your files are in the root directory:
-app.mount("/static", StaticFiles(directory="."), name="static")
-
+# 1. Initialize FastAPI app FIRST
 app = FastAPI(title="Global Weather API Proxy")
+
+# 2. Mount static files AFTER app is created so logo.png can be served properly
+app.mount("/static", StaticFiles(directory="."), name="static")
 
 # Enable CORS so your frontend can communicate with the backend
 app.add_middleware(
