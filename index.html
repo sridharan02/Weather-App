@@ -8,25 +8,25 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0f1011;
-    --panel:#4858e4;
-    --panel-hi:#173248;
-    --line:#24435C;
-    --paper:#EDEFF2;
-    --muted:#8FA6B9;
-    --sun:#F2A65A;
-    --sky:#7EC8E3;
-    --storm:#8592A0;
-    --rain:#3E93A6;
-    --alert:#E8654F;
-    --cold:#5AA9D6;
+    --ink:#080b11;
+    --panel: linear-gradient(145deg, #131c2e, #0d1320);
+    --panel-hi: linear-gradient(145deg, #1b2842, #111a2d);
+    --line:#1e3a5f;
+    --paper:#F0F4F8;
+    --muted:#7c9cb5;
+    --sun:#F6AD55;
+    --sky:#63B3ED;
+    --storm:#90CDF4;
+    --rain:#4FD1C5;
+    --alert:#FC8181;
+    --cold:#68D391;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse at 15% -10%, rgba(126,200,227,0.10), transparent 45%),
-      radial-gradient(ellipse at 100% 0%, rgba(242,166,90,0.07), transparent 40%),
+      radial-gradient(ellipse at 15% -10%, rgba(99,179,237,0.12), transparent 45%),
+      radial-gradient(ellipse at 100% 0%, rgba(246,173,85,0.08), transparent 40%),
       var(--ink);
     color:var(--paper);
     font-family:'Inter',sans-serif;
@@ -83,7 +83,7 @@
     font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.05em;
     font-size:13px; padding:6px 12px; border-radius:3px; cursor:pointer;
   }
-  .source-btn:hover{background:rgba(126,200,227,0.1);}
+  .source-btn:hover{background:rgba(99,179,237,0.1);}
   .source-panel{
     display:none; margin-top:14px; padding:16px 18px; background:var(--panel);
     border:1px solid var(--line); border-radius:5px; max-width:640px;
@@ -97,7 +97,7 @@
     padding:9px 12px; border-radius:3px; font-size:12.5px; outline:none;
   }
   .source-form input:focus{border-color:var(--sky);}
-  .keynote{margin:10px 0 0 !important; font-size:11px !important; color:#5C7186 !important;}
+  .keynote{margin:10px 0 0 !important; font-size:11px !important; color:#4a6b8a !important;}
 
   /* ---------- nav / breadcrumb ---------- */
   .navbar{
@@ -138,25 +138,44 @@
   .backbtn:hover{border-color:var(--sky); color:var(--sky);}
   .count{color:var(--muted); font-size:12.5px; font-family:'Space Mono',monospace; margin-left:auto;}
 
-  /* ---------- grid ---------- */
+  /* ---------- grid & 3d cards ---------- */
   .grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-    gap:14px;
+    gap:18px;
     padding:18px 5vw 10px;
   }
   .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-left:3px solid var(--line);
-    border-radius:4px;
-    padding:15px 16px 14px;
-    cursor:pointer;
-    transition:border-color .15s, transform .1s, background .15s;
-    position:relative;
-    min-height:118px;
+    background: var(--panel);
+    border: 1px solid rgba(99, 179, 237, 0.2);
+    border-left: 3px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px 15px;
+    cursor: pointer;
+    position: relative;
+    min-height: 118px;
+    
+    /* 3D Depth Floating Shadows & Inner Highlights */
+    box-shadow: 
+      0 12px 24px -6px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+      
+    transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                box-shadow 0.25s ease, 
+                border-color 0.25s ease, 
+                background 0.25s ease;
   }
-  .card:hover{background:var(--panel-hi); transform:translateY(-2px);}
+  .card:hover{
+    background: var(--panel-hi);
+    transform: translateY(-6px) scale(1.02);
+    border-color: rgba(99, 179, 237, 0.6);
+    box-shadow: 
+      0 20px 35px -10px rgba(30, 144, 255, 0.3),
+      0 8px 15px -4px rgba(0, 0, 0, 0.7),
+      inset 0 1px 2px rgba(255, 255, 255, 0.2),
+      inset 0 -2px 5px rgba(0, 0, 0, 0.5);
+  }
   .card.leaf{cursor:default;}
   .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
   .card-name{
@@ -199,10 +218,13 @@
   .detail{
     margin:8px 5vw 0;
     background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:6px;
+    border:1px solid rgba(99, 179, 237, 0.25);
+    border-radius:8px;
     padding:24px 26px;
     display:none;
+    box-shadow: 
+      0 16px 30px -8px rgba(0, 0, 0, 0.7),
+      inset 0 1px 1px rgba(255, 255, 255, 0.1);
   }
   .detail.show{display:block;}
   .detail-head{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
@@ -242,7 +264,7 @@
 
 <header>
   <svg class="isobars" viewBox="0 0 400 400">
-    <g fill="none" stroke="#7EC8E3" stroke-width="1">
+    <g fill="none" stroke="#63B3ED" stroke-width="1">
       <circle cx="330" cy="60" r="40"/>
       <circle cx="330" cy="60" r="80"/>
       <circle cx="330" cy="60" r="120"/>
@@ -303,7 +325,6 @@ function applyGoogleKey(){
   document.getElementById('sourceLabel').textContent = 'SOURCE: GOOGLE WEATHER';
   document.getElementById('sourceToggle').textContent = 'CHANGE SOURCE →';
   document.getElementById('sourcePanel').classList.remove('show');
-  // re-render whatever's on screen so cards refresh under the new source
   if(currentLevel==='countries') renderCountryGrid(currentItems);
   if(currentLevel==='states') renderStateGrid(currentItems);
   if(currentLevel==='cities') renderCityGrid(currentItems);
@@ -332,8 +353,7 @@ function prettifyLabel(type){
   return type.toLowerCase().split('_').map(w=>w[0].toUpperCase()+w.slice(1)).join(' ');
 }
 
-/* ===================== COUNTRY REGISTRY (baked in — no network call needed) ===================== */
-/* restcountries.com has repeated outages, so the roster ships with the page itself. */
+/* ===================== COUNTRY REGISTRY ===================== */
 function flagEmoji(iso2){
   if(!iso2 || iso2.length!==2) return '';
   const codePoints = [...iso2.toUpperCase()].map(c => 0x1F1E6 + (c.charCodeAt(0) - 65));
@@ -567,8 +587,8 @@ function iconHTML(code, size){
 }
 function tempAccent(t){
   if(t===null||t===undefined||isNaN(t)) return 'var(--line)';
-  if(t < 0) return 'var(--cold)';
-  if(t < 15) return 'var(--sky)';
+  if(t < 0) return 'var(--sky)';
+  if(t < 15) return 'var(--cold)';
   if(t < 28) return 'var(--rain)';
   if(t < 36) return 'var(--sun)';
   return 'var(--alert)';
@@ -591,16 +611,11 @@ async function fetchWeather(lat, lon, needSun){
   return await fetchOpenMeteoWeather(lat, lon, needSun);
 }
 
-/* ===================== UPDATED FETCH HELPER ===================== */
 async function fetchOpenMeteoWeather(lat, lon, needSun){
-  // Calls your custom Python FastAPI endpoint instead of hitting third-party APIs directly
   const url = `/api/weather?lat=${lat}&lon=${lon}&need_sun=${needSun}`;
-  
   const res = await fetch(url);
   if(!res.ok) throw new Error('Weather fetch failed');
   const data = await res.json();
-  
-  // Format weather icon and label according to WMO weather codes
   const m = weatherMeta(data.weatherCode);
   
   return {
@@ -743,14 +758,13 @@ async function loadStates(country){
     let states = (data.data && data.data.states) ? data.data.states : [];
 
     if(!states.length){
-      // fall back: show the country's own live weather as a single detail
       grid.innerHTML='';
       document.getElementById('empty').style.display='block';
       document.getElementById('empty').textContent = 'NO SUBDIVISIONS ON FILE — showing national reading instead.';
       openDetail(country.name, country.flag, country.lat, country.lon, country.capital);
       return;
     }
-    states = states.slice(0,60); // keep panel responsive
+    states = states.slice(0,60);
     currentItems = states.map(s => ({name:s.name, country}));
     renderStateGrid(currentItems);
     if(data.data.states.length>60){
@@ -836,11 +850,10 @@ function renderCityGrid(items){
   items.forEach((c,i) => resolveAndLoad(`c-city-${i}`, c.name, ctx.country.cca2, true));
 }
 
-/* store resolved coords for cities so detail click doesn't re-geocode */
 let cityCoordCache = {};
 
 async function resolveAndLoad(cardId, name, cca2, isCity){
-  const geo = await geocode(name + (isCity ? '' : ''), cca2).catch(()=>null);
+  const geo = await geocode(name, cca2).catch(()=>null);
   const el = document.getElementById(cardId);
   if(!el) return;
   if(!geo){
@@ -858,7 +871,7 @@ async function loadCardWeather(cardId, lat, lon){
   if(!el) return;
   try{
     const w = await fetchWeather(lat, lon, false);
-    if(!document.getElementById(cardId)) return; // view may have changed
+    if(!document.getElementById(cardId)) return;
     el.style.borderLeftColor = tempAccent(w.temp);
     const topEl = el.querySelector('.card-top');
     if(!topEl.querySelector('.card-icon, .card-icon-img')){
