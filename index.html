@@ -859,6 +859,7 @@ function renderBreadcrumb(){
 }
 
 /* ===================== LEVEL 1: COUNTRIES ===================== */
+/* ===================== LEVEL 1: COUNTRIES ===================== */
 function loadCountries(){
   currentLevel = 'countries'; ctx.country=null; ctx.state=null;
   document.getElementById('searchInput').value = '';
@@ -876,27 +877,21 @@ function loadCountries(){
 }
 
 function renderCountryGrid(items){
-  document.getElementById('count').textContent = `${items.length} STATIONS ACTIVE`;
+  document.getElementById('count').textContent = `${items.length} STATIONS READY`;
   const grid = document.getElementById('grid');
   document.getElementById('empty').style.display = items.length ? 'none':'block';
   if(!items.length){ document.getElementById('empty').textContent='NO MATCH FOUND'; grid.innerHTML=''; return; }
 
+  // Render cards instantly with a placeholder state to prevent API flooding
   grid.innerHTML = items.map((c,i) => `
     <div class="card" id="c-country-${i}" onclick="loadStates(ALL_COUNTRIES.find(x=>x.name==='${c.name.replace(/'/g,"\\'")}'))">
       <div class="card-top">
         <div class="card-name">${c.name}</div>
         <img class="card-flag-img" src="${c.flagUrl}" alt="${c.cca2}">
       </div>
-      <div class="card-status"><span class="pulse"></span>ACQUIRING…</div>
+      <div class="card-status"><span class="pulse" style="background:var(--sky)"></span>CLICK TO INSPECT</div>
     </div>
   `).join('');
-
-  // Stagger requests by 50ms each so Open-Meteo doesn't block the flood of requests
-  items.forEach((c,i) => {
-    setTimeout(() => {
-      loadCardWeather(`c-country-${i}`, c.lat, c.lon);
-    }, i * 50); 
-  });
 }
 /* ===================== LEVEL 2: STATES ===================== */
 async function loadStates(country){
