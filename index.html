@@ -74,7 +74,20 @@
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
   .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.3; pointer-events:none;}
-  .header-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
+  .header-top{display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;}
+  
+  /* Logo + Title Layout */
+  .brand-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+  }
+
   .callsign h1{
     font-size:clamp(30px,4.5vw,50px);
     font-weight:700;
@@ -228,7 +241,6 @@
     color: var(--paper);
   }
   
-  /* Real Country Flag Images via flagcdn */
   .card-flag-img {
     width: 36px;
     height: 24px;
@@ -329,8 +341,16 @@
     </g>
   </svg>
   <div class="header-top">
-    <div class="callsign">
-      <h1>Aetheria — Live Global Meteorological Matrix</h1>
+    <div class="brand-container">
+      <!-- Modern SVG Weather Logo -->
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="5" fill="var(--sun)" />
+        <path d="M12 2V4M12 20V22M2 12H4M20 12H22M4.929 4.929L6.343 6.343M17.657 17.657L19.071 19.071M4.929 19.071L6.343 17.657M17.657 6.343L19.071 4.929" stroke="var(--sky)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M7 16H17A4 4 0 0 0 17 8A5 5 0 0 0 7.35 9.5A3.5 3.5 0 0 0 7 16Z" fill="var(--sky)" fill-opacity="0.2" stroke="var(--sky)" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      <div class="callsign">
+        <h1>Aetheria — Live Global Meteorological Matrix</h1>
+      </div>
     </div>
     <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Night Mode</button>
   </div>
