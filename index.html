@@ -1016,19 +1016,28 @@ function renderCityGrid(items){
 let cityCoordCache = {};
 
 async function resolveAndLoad(cardId, name, cca2, isCity){
-  const geo = await geocode(name, cca2).catch(()=>null);
   const el = document.getElementById(cardId);
   if(!el) return;
+
+  // Try geocoding the specific region first
+  let geo = await geocode(name, cca2).catch(()=>null);
+  
+  // Fallback: If geocoding fails for a state/province, use the country's center coordinates so it never shows "NO SIGNAL"
+  if(!geo && currentLevel === 'states' && ctx.country) {
+    geo = { latitude: ctx.country.lat, longitude: ctx.country.lon };
+  }
+
   if(!geo){
     el.classList.add('err');
-    el.querySelector('.card-status').innerHTML = `<span style="color:var(--muted)">NO SIGNAL</span>`;
+    const statusEl = el.querySelector('.card-status');
+    if(statusEl) statusEl.innerHTML = `<span style="color:var(--muted)">NO SIGNAL</span>`;
     el.onclick = null;
     return;
   }
+
   if(isCity) cityCoordCache[cardId] = {lat:geo.latitude, lon:geo.longitude, name};
   await loadCardWeather(cardId, geo.latitude, geo.longitude);
 }
-
 async function loadCardWeather(cardId, lat, lon){
   const el = document.getElementById(cardId);
   if(!el) return;
