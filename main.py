@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
-import requests
+import httpx
 
 app = FastAPI(title="Global Weather API Proxy")
 
@@ -19,9 +19,9 @@ app.add_middleware(
 def read_root():
     return FileResponse("index.html")
 
-# 2. Custom Weather API Endpoint with safe error fallback
+# 2. Asynchronous Weather API Endpoint
 @app.get("/api/weather")
-def get_weather(
+async def get_weather(
     lat: float = Query(..., description="Latitude"),
     lon: float = Query(..., description="Longitude"),
     need_sun: bool = Query(False, description="Include sunrise/sunset times")
@@ -35,36 +35,37 @@ def get_weather(
         f"{daily_param}&timezone=auto"
     )
 
+    headers = {"User-Agent": "AetheriaWeatherApp/1.0"}
+    
     try:
-        headers = {"User-Agent": "AetheriaWeatherApp/1.0"}
-        response = requests.get(open_meteo_url, headers=headers, timeout=10)
-        
-        if response.status_code != 200:
-            return {
-                "source": "fallback",
-                "temp": 0, "feelsLike": 0, "humidity": 0, "precip": 0,
-                "windSpeed": 0, "windDir": 0, "weatherCode": 3,
-                "time": None, "sunrise": "—", "sunset": "—"
-            }
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            response = await client.get(open_meteo_url, headers=headers)
             
-        data = response.json()
-        cur = data.get("current", {})
-        daily = data.get("daily", {})
+            if response.status_code != 200:
+                return {
+                    "source": "fallback",
+                    "temp": 0, "feelsLike": 0, "humidity": 0, "precip": 0,
+                    "windSpeed": 0, "windDir": 0, "weatherCode": 3,
+                    "time": None, "sunrise": "—", "sunset": "—"
+                }
+                
+            data = response.json()
+            cur = data.get("current", {})
+            daily = data.get("daily", {})
 
-        # Process and return structured weather JSON response
-        return {
-            "source": "custom_fastapi_backend",
-            "temp": cur.get("temperature_2m", 0),
-            "feelsLike": cur.get("apparent_temperature", 0),
-            "humidity": cur.get("relative_humidity_2m", 0),
-            "precip": cur.get("precipitation", 0),
-            "windSpeed": cur.get("wind_speed_10m", 0),
-            "windDir": cur.get("wind_direction_10m", 0),
-            "weatherCode": cur.get("weather_code", 0),
-            "time": cur.get("time"),
-            "sunrise": daily.get("sunrise", ["—"])[0][-5:] if need_sun and daily.get("sunrise") else "—",
-            "sunset": daily.get("sunset", ["—"])[0][-5:] if need_sun and daily.get("sunset") else "—"
-        }
+            return {
+                "source": "custom_fastapi_backend",
+                "temp": cur.get("temperature_2m", 0),
+                "feelsLike": cur.get("apparent_temperature", 0),
+                "humidity": cur.get("relative_humidity_2m", 0),
+                "precip": cur.get("precipitation", 0),
+                "windSpeed": cur.get("wind_speed_10m", 0),
+                "windDir": cur.get("wind_direction_10m", 0),
+                "weatherCode": cur.get("weather_code", 0),
+                "time": cur.get("time"),
+                "sunrise": daily.get("sunrise", ["—"])[0][-5:] if need_sun and daily.get("sunrise") else "—",
+                "sunset": daily.get("sunset", ["—"])[0][-5:] if need_sun and daily.get("sunset") else "—"
+            }
     except Exception as e:
         return {
             "source": "error_fallback",
