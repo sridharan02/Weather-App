@@ -7,33 +7,59 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    /* Bright, Vivid Solar / Neon Turquoise Palette */
-    --ink:#0f172a;
+  :root {
+    /* Light Mode Palette (Default) */
+    --ink: #f0f4f8;
+    --panel: linear-gradient(135deg, #ffffff, #e2e8f0);
+    --panel-hi: linear-gradient(135deg, #ffffff, #cbd5e1);
+    --line: #0284c7;
+    --paper: #0f172a;
+    --muted: #475569;
+    --sun: #d97706;
+    --sky: #0284c7;
+    --storm: #64748b;
+    --rain: #0d9488;
+    --alert: #e11d48;
+    --cold: #16a34a;
+    --bg-gradient: radial-gradient(ellipse at 15% -10%, rgba(2, 132, 199, 0.15), transparent 50%),
+                   radial-gradient(ellipse at 85% 10%, rgba(217, 119, 6, 0.12), transparent 45%),
+                   #f8fafc;
+    --header-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(241, 245, 249, 0.95));
+    --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(2, 132, 199, 0.1);
+    --card-hover-shadow: 0 20px 35px -8px rgba(0, 0, 0, 0.15), 0 8px 16px -4px rgba(2, 132, 199, 0.2);
+  }
+
+  [data-theme="dark"] {
+    /* Night Mode Palette */
+    --ink: #0f172a;
     --panel: linear-gradient(135deg, #1e293b, #0f172a);
     --panel-hi: linear-gradient(135deg, #334155, #1e293b);
-    --line:#38bdf8;
-    --paper:#ffffff;
-    --muted:#cbd5e1;
-    --sun:#facc15;
-    --sky:#38bdf8;
-    --storm:#94a3b8;
-    --rain:#2dd4bf;
-    --alert:#f43f5e;
-    --cold:#4ade80;
+    --line: #38bdf8;
+    --paper: #ffffff;
+    --muted: #cbd5e1;
+    --sun: #facc15;
+    --sky: #38bdf8;
+    --storm: #94a3b8;
+    --rain: #2dd4bf;
+    --alert: #f43f5e;
+    --cold: #4ade80;
+    --bg-gradient: radial-gradient(ellipse at 15% -10%, rgba(56, 189, 248, 0.35), transparent 50%),
+                   radial-gradient(ellipse at 85% 10%, rgba(250, 204, 21, 0.25), transparent 45%),
+                   #0f172a;
+    --header-bg: linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
+    --card-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.7), 0 6px 15px -3px rgba(56, 189, 248, 0.25);
+    --card-hover-shadow: 0 25px 40px -8px rgba(56, 189, 248, 0.45), 0 12px 25px -4px rgba(0, 0, 0, 0.8);
   }
+
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
-    background:
-      radial-gradient(ellipse at 15% -10%, rgba(56, 189, 248, 0.35), transparent 50%),
-      radial-gradient(ellipse at 85% 10%, rgba(250, 204, 21, 0.25), transparent 45%),
-      radial-gradient(ellipse at 50% 90%, rgba(45, 212, 191, 0.2), transparent 50%),
-      var(--ink);
-    color:var(--paper);
+    background: var(--bg-gradient);
+    color: var(--paper);
     font-family:'Inter',sans-serif;
     min-height:100vh;
     padding-bottom:60px;
+    transition: background 0.3s ease, color 0.3s ease;
   }
   .mono{font-family:'Space Mono',monospace;}
   .disp{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:0.04em;}
@@ -44,23 +70,42 @@
     padding:35px 5vw 28px;
     border-bottom:3px solid var(--sky);
     overflow:hidden;
-    background: linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.95));
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: var(--header-bg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   }
-  .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.4; pointer-events:none;}
-  .callsign{
-    display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
-  }
+  .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.3; pointer-events:none;}
+  .header-top{display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap;}
   .callsign h1{
-    font-size:clamp(32px,4.5vw,52px);
+    font-size:clamp(30px,4.5vw,50px);
     font-weight:700;
     margin:0;
     letter-spacing:0.04em;
-    background: linear-gradient(90deg, #ffffff, #38bdf8, #facc15);
+    background: linear-gradient(90deg, var(--sky), var(--sun));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
   }
+  
+  /* Theme Toggle Button */
+  .theme-btn{
+    background: var(--panel);
+    border: 2px solid var(--sky);
+    color: var(--paper);
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:15px;
+    font-weight:bold;
+    text-transform:uppercase;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s;
+  }
+  .theme-btn:hover{
+    background: var(--sky);
+    color: var(--ink);
+  }
+
   header p.sub{
     color:var(--muted);
     margin:10px 0 0;
@@ -74,33 +119,32 @@
     color:var(--sun);
     letter-spacing:0.1em;
     font-weight:700;
-    text-shadow: 0 0 10px rgba(250,204,21,0.4);
   }
   .source-row{
     margin-top:18px; display:flex; align-items:center; gap:14px; flex-wrap:wrap;
   }
   .source-label{font-size:11.5px; color:var(--muted); letter-spacing:0.04em;}
   .source-btn{
-    background:rgba(56, 189, 248, 0.15); border:2px solid var(--sky); color:var(--sky);
+    background:rgba(2, 132, 199, 0.1); border:2px solid var(--sky); color:var(--sky);
     font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.05em;
     font-size:13.5px; font-weight: 600; padding:6px 14px; border-radius:6px; cursor:pointer;
     transition: all 0.2s;
   }
-  .source-btn:hover{background:var(--sky); color:var(--ink); box-shadow: 0 0 15px rgba(56,189,248,0.6);}
+  .source-btn:hover{background:var(--sky); color:var(--paper);}
   .source-panel{
     display:none; margin-top:14px; padding:18px 20px; background:var(--panel);
     border:2px solid var(--sky); border-radius:8px; max-width:640px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
   }
   .source-panel.show{display:block;}
   .source-panel p{margin:0 0 12px; font-size:12.5px; color:var(--paper); line-height:1.6;}
   .source-panel a{color:var(--sun);}
   .source-form{display:flex; gap:10px; flex-wrap:wrap;}
   .source-form input{
-    flex:1; min-width:220px; background:#0f172a; border:2px solid var(--sky); color:var(--paper);
+    flex:1; min-width:220px; background:var(--ink); border:2px solid var(--sky); color:var(--paper);
     padding:10px 14px; border-radius:6px; font-size:12.5px; outline:none;
   }
-  .source-form input:focus{border-color:var(--sun); box-shadow: 0 0 10px rgba(250,204,21,0.5);}
+  .source-form input:focus{border-color:var(--sun);}
   .keynote{margin:10px 0 0 !important; font-size:11px !important; color:var(--muted) !important;}
 
   /* ---------- nav / breadcrumb ---------- */
@@ -118,9 +162,9 @@
     padding:6px 4px;
     display:flex; align-items:center; gap:6px;
   }
-  .crumb.active{color:var(--sun); font-weight:700; text-shadow: 0 0 8px rgba(250,204,21,0.3);}
+  .crumb.active{color:var(--sun); font-weight:700;}
   .crumb:hover{color:var(--sky);}
-  .crumb .flagmini{font-size:18px; line-height:1;}
+  .crumb .flag-img{width:20px; height:15px; object-fit:cover; border-radius:2px;}
   .sep{color:var(--sky);}
 
   .controls{
@@ -128,7 +172,7 @@
     padding:14px 5vw 6px;
   }
   .backbtn{
-    background:rgba(56, 189, 248, 0.15);
+    background:rgba(2, 132, 199, 0.1);
     border:2px solid var(--sky);
     color:var(--paper);
     font-family:'Barlow Condensed',sans-serif;
@@ -141,7 +185,7 @@
     cursor:pointer;
     transition: all 0.2s;
   }
-  .backbtn:hover{background:var(--sky); color:var(--ink); box-shadow: 0 0 12px rgba(56,189,248,0.5);}
+  .backbtn:hover{background:var(--sky); color:var(--ink);}
   .count{color:var(--sun); font-size:14px; font-family:'Space Mono',monospace; margin-left:auto; font-weight:700;}
 
   /* ---------- grid & 3d vibrant cards ---------- */
@@ -153,21 +197,14 @@
   }
   .card{
     background: var(--panel);
-    border: 2px solid rgba(56, 189, 248, 0.4);
+    border: 2px solid rgba(2, 132, 199, 0.2);
     border-left: 6px solid var(--sky);
     border-radius: 12px;
     padding: 18px;
     cursor: pointer;
     position: relative;
     min-height: 130px;
-    
-    /* Glowing 3D Floating Depth Shadows & Bright Highlights */
-    box-shadow: 
-      0 15px 30px -5px rgba(0, 0, 0, 0.7),
-      0 6px 15px -3px rgba(56, 189, 248, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3),
-      inset 0 -2px 6px rgba(0, 0, 0, 0.6);
-      
+    box-shadow: var(--card-shadow);
     transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                 box-shadow 0.25s ease, 
                 border-color 0.25s ease, 
@@ -177,11 +214,7 @@
     background: var(--panel-hi);
     transform: translateY(-8px) scale(1.03);
     border-color: var(--sun);
-    box-shadow: 
-      0 25px 40px -8px rgba(56, 189, 248, 0.45),
-      0 12px 25px -4px rgba(0, 0, 0, 0.8),
-      inset 0 1px 3px rgba(255, 255, 255, 0.4),
-      inset 0 -2px 6px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--card-hover-shadow);
   }
   .card.leaf{cursor:default;}
   .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
@@ -192,17 +225,26 @@
     font-size:18px;
     letter-spacing:0.03em;
     line-height:1.2;
-    color: #ffffff;
+    color: var(--paper);
   }
-  .card-flag-emoji{font-size:28px; line-height:1; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));}
-  .card-icon svg{width:36px;height:36px; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));}
+  
+  /* Real Country Flag Images via flagcdn */
+  .card-flag-img {
+    width: 36px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+  }
+
+  .card-icon svg{width:36px;height:36px; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));}
   .card-temp{
     font-family:'Space Mono',monospace;
     font-size:28px;
     margin-top:12px;
     font-weight:700;
     letter-spacing: -0.02em;
-    text-shadow: 0 0 10px rgba(255,255,255,0.2);
   }
   .card-meta{
     display:flex; gap:14px; margin-top:8px;
@@ -220,7 +262,7 @@
   .pulse{
     width:8px;height:8px;border-radius:50%;
     background:var(--sun);
-    box-shadow: 0 0 10px var(--sun);
+    box-shadow: 0 0 8px var(--sun);
     animation:pulse 1.1s infinite ease-in-out;
   }
   @keyframes pulse{0%,100%{opacity:0.4; transform: scale(0.9);}50%{opacity:1; transform: scale(1.3);}}
@@ -234,31 +276,34 @@
     border-radius: 12px;
     padding: 28px 32px;
     display: none;
-    box-shadow: 
-      0 25px 45px -10px rgba(0, 0, 0, 0.8),
-      0 0 20px rgba(250, 204, 21, 0.15),
-      inset 0 1px 3px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.2);
   }
   .detail.show{display:block;}
   .detail-head{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
-  .detail-flag{font-size:48px; line-height:1; filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));}
-  .detail-title{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-size:32px;font-weight:700; color: #ffffff;}
+  .detail-flag {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+  }
+  .detail-title{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;font-size:32px;font-weight:700; color: var(--paper);}
   .detail-sub{color:var(--muted); font-family:'Space Mono',monospace; font-size:12px; margin-top:4px;}
   .detail-body{display:flex; gap:36px; flex-wrap:wrap; margin-top:24px; align-items:center;}
-  .big-icon svg{width:92px;height:92px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));}
+  .big-icon svg{width:92px;height:92px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));}
   .big-temp{font-family:'Space Mono',monospace; font-size:60px; font-weight:700; line-height:1; letter-spacing:-0.03em;}
   .big-label{font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; color:var(--muted); letter-spacing:0.08em; margin-top:6px; font-size:15px;}
   .stat-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(115px,1fr)); gap:18px; flex:1; min-width:280px;}
   .stat{border-left:3px solid var(--sun); padding-left:12px;}
-  .stat-val{font-family:'Space Mono',monospace; font-size:20px; font-weight: 700; color: #ffffff;}
+  .stat-val{font-family:'Space Mono',monospace; font-size:20px; font-weight: 700; color: var(--paper);}
   .stat-key{font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; color:var(--muted); font-size:12px; letter-spacing:0.06em; margin-top:3px;}
   .compass{width:75px;height:75px; flex-shrink:0;}
   .closebtn{
-    background:rgba(250, 204, 21, 0.15); border:2px solid var(--sun); color:var(--sun);
+    background:rgba(217, 119, 6, 0.15); border:2px solid var(--sun); color:var(--sun);
     font-family:'Space Mono',monospace; font-size:11.5px; font-weight: bold; padding:6px 14px; border-radius:6px; cursor:pointer; margin-left:auto;
     transition: all 0.2s;
   }
-  .closebtn:hover{background:var(--sun); color:var(--ink); box-shadow: 0 0 10px rgba(250,204,21,0.6);}
+  .closebtn:hover{background:var(--sun); color:var(--ink);}
 
   .empty{
     padding:60px 5vw; text-align:center; color:var(--muted);
@@ -271,11 +316,11 @@
   }
 </style>
 </head>
-<body>
+<body data-theme="light">
 
 <header>
   <svg class="isobars" viewBox="0 0 400 400">
-    <g fill="none" stroke="#38bdf8" stroke-width="2">
+    <g fill="none" stroke="var(--sky)" stroke-width="2">
       <circle cx="330" cy="60" r="40"/>
       <circle cx="330" cy="60" r="80"/>
       <circle cx="330" cy="60" r="120"/>
@@ -283,8 +328,11 @@
       <circle cx="330" cy="60" r="200"/>
     </g>
   </svg>
-  <div class="callsign">
-    <h1>Aetheria — Live Global Meteorological Matrix</h1>
+  <div class="header-top">
+    <div class="callsign">
+      <h1>Aetheria — Live Global Meteorological Matrix</h1>
+    </div>
+    <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 Night Mode</button>
   </div>
   <p class="sub">Real-time meteorological telemetry pulled on demand — zero caching, direct API ingestion. Select a territory to inspect regional weather matrices down to local settlements.</p>
   <div class="clock mono" id="clock">— : — : — UTC</div>
@@ -316,6 +364,19 @@
 <div class="detail" id="detail"></div>
 
 <script>
+/* ===================== THEME TOGGLE ===================== */
+function toggleTheme() {
+  const body = document.body;
+  const btn = document.getElementById('themeToggleBtn');
+  if(body.getAttribute('data-theme') === 'light') {
+    body.setAttribute('data-theme', 'dark');
+    btn.textContent = '☀️ Light Mode';
+  } else {
+    body.setAttribute('data-theme', 'light');
+    btn.textContent = '🌙 Night Mode';
+  }
+}
+
 /* ===================== STATE ===================== */
 let ALL_COUNTRIES = [];
 let currentLevel = 'countries'; // countries | states | cities
@@ -364,10 +425,9 @@ function prettifyLabel(type){
 }
 
 /* ===================== COUNTRY REGISTRY ===================== */
-function flagEmoji(iso2){
+function flagImageURL(iso2){
   if(!iso2 || iso2.length!==2) return '';
-  const codePoints = [...iso2.toUpperCase()].map(c => 0x1F1E6 + (c.charCodeAt(0) - 65));
-  return String.fromCodePoint(...codePoints);
+  return `https://flagcdn.com/w40/${iso2.toLowerCase()}.png`;
 }
 const COUNTRIES_DATA = [
 {n:"Afghanistan",i:"AF",lat:33.9391,lon:67.71},
@@ -704,7 +764,7 @@ function renderBreadcrumb(){
   let html = `<button class="crumb ${currentLevel==='countries'?'active':''}" onclick="loadCountries()">All Territories</button>`;
   if(ctx.country){
     html += `<span class="sep">›</span><button class="crumb ${currentLevel==='states'?'active':''}" onclick="loadStates(ctx.country)">
-      <span class="flagmini">${ctx.country.flag}</span>${ctx.country.name}</button>`;
+      <img class="flag-img" src="${ctx.country.flagUrl}" alt="">${ctx.country.name}</button>`;
   }
   if(ctx.state){
     html += `<span class="sep">›</span><button class="crumb ${currentLevel==='cities'?'active':''}" onclick="loadCities(ctx.country,ctx.state)">${ctx.state.name}</button>`;
@@ -721,7 +781,7 @@ function loadCountries(){
 
   if(!ALL_COUNTRIES.length){
     ALL_COUNTRIES = COUNTRIES_DATA.map(c => ({
-      name: c.n, cca2: c.i, flag: flagEmoji(c.i), lat: c.lat, lon: c.lon
+      name: c.n, cca2: c.i, flagUrl: flagImageURL(c.i), lat: c.lat, lon: c.lon
     }));
   }
   currentItems = ALL_COUNTRIES;
@@ -738,7 +798,7 @@ function renderCountryGrid(items){
     <div class="card" id="c-country-${i}" onclick="loadStates(ALL_COUNTRIES.find(x=>x.name==='${c.name.replace(/'/g,"\\'")}'))">
       <div class="card-top">
         <div class="card-name">${c.name}</div>
-        <div class="card-flag-emoji">${c.flag}</div>
+        <img class="card-flag-img" src="${c.flagUrl}" alt="${c.cca2}">
       </div>
       <div class="card-status"><span class="pulse"></span>ACQUIRING…</div>
     </div>
@@ -770,7 +830,7 @@ async function loadStates(country){
       grid.innerHTML='';
       document.getElementById('empty').style.display='block';
       document.getElementById('empty').textContent = 'NO SUBDIVISIONS ON FILE — showing national reading instead.';
-      openDetail(country.name, country.flag, country.lat, country.lon);
+      openDetail(country.name, country.flagUrl, country.lat, country.lon);
       return;
     }
     states = states.slice(0,60);
@@ -796,7 +856,7 @@ function renderStateGrid(items){
     <div class="card" id="c-state-${i}" onclick="loadCities(ctx.country, {name:'${s.name.replace(/'/g,"\\'")}'})">
       <div class="card-top">
         <div class="card-name">${s.name}</div>
-        <div class="card-flag-emoji">${ctx.country.flag}</div>
+        <img class="card-flag-img" src="${ctx.country.flagUrl}" alt="">
       </div>
       <div class="card-status"><span class="pulse"></span>LOCATING…</div>
     </div>
@@ -852,7 +912,7 @@ function renderCityGrid(items){
     <div class="card" id="c-city-${i}" onclick="expandCityDetail(${i})">
       <div class="card-top">
         <div class="card-name">${c.name}</div>
-        <div class="card-flag-emoji">${ctx.country.flag}</div>
+        <img class="card-flag-img" src="${ctx.country.flagUrl}" alt="">
       </div>
       <div class="card-status"><span class="pulse"></span>LOCATING…</div>
     </div>
@@ -916,10 +976,10 @@ function expandCityDetail(i){
   const cardId = `c-city-${i}`;
   const c = cityCoordCache[cardId];
   if(!c) return;
-  openDetail(c.name, ctx.country.flag, c.lat, c.lon);
+  openDetail(c.name, ctx.country.flagUrl, c.lat, c.lon);
 }
 
-async function openDetail(name, flag, lat, lon, sub){
+async function openDetail(name, flagUrl, lat, lon, sub){
   const panel = document.getElementById('detail');
   panel.classList.add('show');
   panel.innerHTML = `<div class="card-status"><span class="pulse"></span>PULLING FULL READOUT…</div>`;
@@ -929,7 +989,7 @@ async function openDetail(name, flag, lat, lon, sub){
     const precipText = w.precip===null || w.precip===undefined ? '—' : `${w.precip}mm`;
     panel.innerHTML = `
       <div class="detail-head">
-        ${flag ? `<span class="detail-flag">${flag}</span>` : ''}
+        ${flagUrl ? `<img class="detail-flag" src="${flagUrl}" alt="">` : ''}
         <div>
           <div class="detail-title">${name}</div>
           <div class="detail-sub">${sub ? sub+' · ' : ''}${lat.toFixed(3)}, ${lon.toFixed(3)} · updated ${w.time ? w.time.slice(11,16) : '—'} local · via ${w.source==='google'?'Google Weather':'Open‑Meteo'}</div>
