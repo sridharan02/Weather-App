@@ -8,25 +8,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#060913;
-    --panel: linear-gradient(135deg, #16223a, #0b1325);
-    --panel-hi: linear-gradient(135deg, #223354, #121c33);
-    --line:#224c7c;
-    --paper:#F4F8FB;
-    --muted:#8ab4d5;
-    --sun:#FFB347;
-    --sky:#38BDF8;
-    --storm:#7DD3FC;
-    --rain:#2DD4BF;
-    --alert:#FB7185;
-    --cold:#4ADE80;
+    /* Vibrant Ocean Breeze / Twilight Blue Palette */
+    --ink:#0b192c;
+    --panel: linear-gradient(135deg, #1e3e62, #15324d);
+    --panel-hi: linear-gradient(135deg, #28527a, #1e3e62);
+    --line:#315f8a;
+    --paper:#f8f9fa;
+    --muted:#94bacf;
+    --sun:#ffd369;
+    --sky:#00d2fc;
+    --storm:#709fb0;
+    --rain:#00b4d8;
+    --alert:#ff6b6b;
+    --cold:#4ecc6d;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
   body{
     background:
-      radial-gradient(ellipse at 15% -10%, rgba(56,189,248,0.18), transparent 45%),
-      radial-gradient(ellipse at 100% 0%, rgba(255,179,71,0.12), transparent 40%),
+      radial-gradient(ellipse at 15% -10%, rgba(0, 210, 252, 0.25), transparent 45%),
+      radial-gradient(ellipse at 100% 0%, rgba(255, 211, 105, 0.2), transparent 40%),
       var(--ink);
     color:var(--paper);
     font-family:'Inter',sans-serif;
@@ -39,23 +40,25 @@
   /* ---------- header ---------- */
   header{
     position:relative;
-    padding:32px 5vw 26px;
-    border-bottom:2px solid var(--line);
+    padding:35px 5vw 28px;
+    border-bottom:2px solid rgba(0, 210, 252, 0.3);
     overflow:hidden;
-    background: linear-gradient(180deg, rgba(56,189,248,0.05), transparent);
+    background: linear-gradient(180deg, rgba(30, 62, 98, 0.8), rgba(11, 25, 44, 0.9));
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   }
-  .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.4; pointer-events:none;}
+  .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.3; pointer-events:none;}
   .callsign{
     display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
   }
   .callsign h1{
-    font-size:clamp(30px,4.5vw,50px);
+    font-size:clamp(32px,4.5vw,52px);
     font-weight:700;
     margin:0;
     letter-spacing:0.04em;
-    background: linear-gradient(90deg, #ffffff, var(--sky));
+    background: linear-gradient(90deg, #ffffff, #00d2fc);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
   }
   header p.sub{
     color:var(--muted);
@@ -66,8 +69,8 @@
   }
   .clock{
     margin-top:16px;
-    font-size:13.5px;
-    color:var(--sky);
+    font-size:14px;
+    color:var(--sun);
     letter-spacing:0.1em;
     font-weight:700;
   }
@@ -76,26 +79,27 @@
   }
   .source-label{font-size:11.5px; color:var(--muted); letter-spacing:0.04em;}
   .source-btn{
-    background:transparent; border:1px solid var(--sky); color:var(--sky);
+    background:rgba(0, 210, 252, 0.1); border:1px solid var(--sky); color:var(--sky);
     font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; letter-spacing:0.05em;
-    font-size:13px; padding:6px 12px; border-radius:4px; cursor:pointer;
+    font-size:13px; padding:6px 14px; border-radius:6px; cursor:pointer;
+    transition: background 0.2s;
   }
-  .source-btn:hover{background:rgba(56,189,248,0.15);}
+  .source-btn:hover{background:rgba(0, 210, 252, 0.25); color: #fff;}
   .source-panel{
-    display:none; margin-top:14px; padding:16px 18px; background:var(--panel);
-    border:1px solid var(--line); border-radius:6px; max-width:640px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    display:none; margin-top:14px; padding:18px 20px; background:var(--panel);
+    border:1px solid var(--sky); border-radius:8px; max-width:640px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
   }
   .source-panel.show{display:block;}
-  .source-panel p{margin:0 0 12px; font-size:12.5px; color:var(--muted); line-height:1.6;}
-  .source-panel a{color:var(--sky);}
+  .source-panel p{margin:0 0 12px; font-size:12.5px; color:var(--paper); line-height:1.6;}
+  .source-panel a{color:var(--sun);}
   .source-form{display:flex; gap:10px; flex-wrap:wrap;}
   .source-form input{
-    flex:1; min-width:220px; background:var(--ink); border:1px solid var(--line); color:var(--paper);
-    padding:9px 12px; border-radius:4px; font-size:12.5px; outline:none;
+    flex:1; min-width:220px; background:#0b192c; border:1px solid var(--line); color:var(--paper);
+    padding:10px 14px; border-radius:6px; font-size:12.5px; outline:none;
   }
-  .source-form input:focus{border-color:var(--sky);}
-  .keynote{margin:10px 0 0 !important; font-size:11px !important; color:#5682a3 !important;}
+  .source-form input:focus{border-color:var(--sky); box-shadow: 0 0 8px rgba(0,210,252,0.4);}
+  .keynote{margin:10px 0 0 !important; font-size:11px !important; color:var(--muted) !important;}
 
   /* ---------- nav / breadcrumb ---------- */
   .navbar{
@@ -122,7 +126,7 @@
     padding:14px 5vw 6px;
   }
   .backbtn{
-    background:transparent;
+    background:rgba(30, 62, 98, 0.6);
     border:1px solid var(--line);
     color:var(--paper);
     font-family:'Barlow Condensed',sans-serif;
@@ -130,11 +134,12 @@
     letter-spacing:0.06em;
     font-size:14px;
     padding:10px 16px;
-    border-radius:4px;
+    border-radius:6px;
     cursor:pointer;
+    transition: all 0.2s;
   }
-  .backbtn:hover{border-color:var(--sky); color:var(--sky);}
-  .count{color:var(--sky); font-size:13px; font-family:'Space Mono',monospace; margin-left:auto; font-weight:700;}
+  .backbtn:hover{border-color:var(--sky); color:var(--sky); background:rgba(0,210,252,0.1);}
+  .count{color:var(--sun); font-size:13.5px; font-family:'Space Mono',monospace; margin-left:auto; font-weight:700;}
 
   /* ---------- grid & 3d vibrant cards ---------- */
   .grid{
@@ -145,20 +150,20 @@
   }
   .card{
     background: var(--panel);
-    border: 1px solid rgba(56, 189, 248, 0.25);
-    border-left: 4px solid var(--sky);
-    border-radius: 10px;
+    border: 1px solid rgba(0, 210, 252, 0.3);
+    border-left: 5px solid var(--sky);
+    border-radius: 12px;
     padding: 18px;
     cursor: pointer;
     position: relative;
-    min-height: 125px;
+    min-height: 130px;
     
-    /* Vibrant 3D Floating Depth Shadows */
+    /* Bright 3D Floating Depth Shadows & Highlights */
     box-shadow: 
-      0 14px 28px -6px rgba(0, 0, 0, 0.65),
-      0 4px 8px -2px rgba(56, 189, 248, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+      0 12px 25px -5px rgba(11, 25, 44, 0.8),
+      0 6px 12px -3px rgba(0, 210, 252, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.4);
       
     transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
                 box-shadow 0.25s ease, 
@@ -168,12 +173,12 @@
   .card:hover{
     background: var(--panel-hi);
     transform: translateY(-8px) scale(1.03);
-    border-color: rgba(56, 189, 248, 0.8);
+    border-color: var(--sky);
     box-shadow: 
-      0 22px 40px -10px rgba(56, 189, 248, 0.35),
-      0 10px 18px -4px rgba(0, 0, 0, 0.7),
-      inset 0 1px 2px rgba(255, 255, 255, 0.25),
-      inset 0 -2px 6px rgba(0, 0, 0, 0.5);
+      0 20px 35px -8px rgba(0, 210, 252, 0.35),
+      0 10px 20px -4px rgba(11, 25, 44, 0.9),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3),
+      inset 0 -2px 6px rgba(0, 0, 0, 0.4);
   }
   .card.leaf{cursor:default;}
   .card-top{display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
@@ -186,7 +191,7 @@
     line-height:1.2;
     color: #ffffff;
   }
-  .card-flag-emoji{font-size:28px; line-height:1; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));}
+  .card-flag-emoji{font-size:28px; line-height:1; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
   .card-icon svg{width:36px;height:36px; flex-shrink:0; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
   .card-temp{
     font-family:'Space Mono',monospace;
@@ -220,14 +225,14 @@
   /* ---------- detail panel ---------- */
   .detail{
     margin:12px 5vw 0;
-    background:var(--panel);
-    border:1px solid rgba(56, 189, 248, 0.4);
-    border-radius:10px;
-    padding:26px 30px;
-    display:none;
+    background: var(--panel);
+    border: 1px solid var(--sky);
+    border-radius: 12px;
+    padding: 28px 32px;
+    display: none;
     box-shadow: 
-      0 20px 35px -10px rgba(0, 0, 0, 0.75),
-      inset 0 1px 2px rgba(255, 255, 255, 0.15);
+      0 20px 40px -10px rgba(11, 25, 44, 0.9),
+      inset 0 1px 2px rgba(255, 255, 255, 0.2);
   }
   .detail.show{display:block;}
   .detail-head{display:flex; align-items:center; gap:16px; flex-wrap:wrap;}
@@ -244,10 +249,11 @@
   .stat-key{font-family:'Barlow Condensed',sans-serif; text-transform:uppercase; color:var(--muted); font-size:12px; letter-spacing:0.06em; margin-top:3px;}
   .compass{width:75px;height:75px; flex-shrink:0;}
   .closebtn{
-    background:rgba(56,189,248,0.1); border:1px solid var(--sky); color:var(--sky);
-    font-family:'Space Mono',monospace; font-size:11.5px; padding:6px 12px; border-radius:4px; cursor:pointer; margin-left:auto;
+    background:rgba(0, 210, 252, 0.1); border:1px solid var(--sky); color:var(--sky);
+    font-family:'Space Mono',monospace; font-size:11.5px; padding:6px 14px; border-radius:6px; cursor:pointer; margin-left:auto;
+    transition: background 0.2s;
   }
-  .closebtn:hover{background:rgba(56,189,248,0.25); color:#fff;}
+  .closebtn:hover{background:rgba(0, 210, 252, 0.3); color:#fff;}
 
   .empty{
     padding:60px 5vw; text-align:center; color:var(--muted);
@@ -264,7 +270,7 @@
 
 <header>
   <svg class="isobars" viewBox="0 0 400 400">
-    <g fill="none" stroke="#38BDF8" stroke-width="1.2">
+    <g fill="none" stroke="#00d2fc" stroke-width="1.5">
       <circle cx="330" cy="60" r="40"/>
       <circle cx="330" cy="60" r="80"/>
       <circle cx="330" cy="60" r="120"/>
@@ -273,7 +279,7 @@
     </g>
   </svg>
   <div class="callsign">
-    <h1>Aetheria — Live Atmospheric Matrix</h1>
+    <h1>Aetheria — Live Global Meteorological Matrix</h1>
   </div>
   <p class="sub">Real-time meteorological telemetry pulled on demand — zero caching, direct API ingestion. Select a territory to inspect regional weather matrices down to local settlements.</p>
   <div class="clock mono" id="clock">— : — : — UTC</div>
@@ -556,7 +562,6 @@ const COUNTRIES_DATA = [
 {n:"Zambia",i:"ZM",lat:-13.133897,lon:27.849332},
 {n:"Zimbabwe",i:"ZW",lat:-19.015438,lon:29.154857}
 ];
-
 
 /* ===================== WEATHER ICONS ===================== */
 function weatherMeta(code){
