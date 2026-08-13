@@ -949,9 +949,13 @@ function renderStateGrid(items){
     </div>
   `).join('');
 
-  items.forEach((s,i) => resolveAndLoad(`c-state-${i}`, s.name, ctx.country.cca2));
+  // Stagger state geocoding requests by 100ms to avoid 429 rate limits
+  items.forEach((s,i) => {
+    setTimeout(() => {
+      resolveAndLoad(`c-state-${i}`, s.name, ctx.country.cca2);
+    }, i * 100);
+  });
 }
-
 /* ===================== LEVEL 3: CITIES / VILLAGES ===================== */
 async function loadCities(country, state){
   currentLevel='cities'; ctx.country=country; ctx.state=state;
