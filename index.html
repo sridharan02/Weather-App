@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aetheria — Live Global Meteorological Matrix</title>
+<!-- Favicon / Browser Tab Logo -->
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -76,7 +78,6 @@
   .isobars{position:absolute; top:-140px; right:-120px; width:420px; height:420px; opacity:0.3; pointer-events:none;}
   .header-top{display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;}
   
-  /* Logo + Title Layout */
   .brand-container {
     display: flex;
     align-items: center;
@@ -99,7 +100,6 @@
     filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
   }
   
-  /* Theme Toggle Button */
   .theme-btn{
     background: var(--panel);
     border: 2px solid var(--sky);
@@ -160,11 +160,45 @@
   .source-form input:focus{border-color:var(--sun);}
   .keynote{margin:10px 0 0 !important; font-size:11px !important; color:var(--muted) !important;}
 
-  /* ---------- nav / breadcrumb ---------- */
+  /* ---------- nav / breadcrumb & search bar ---------- */
   .navbar{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
     padding:20px 5vw 0;
   }
+  .breadcrumb-group {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-box input {
+    background: var(--panel);
+    border: 2px solid var(--sky);
+    color: var(--paper);
+    padding: 8px 14px 8px 36px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-family: 'Space Mono', monospace;
+    outline: none;
+    width: 240px;
+    box-shadow: var(--card-shadow);
+    transition: all 0.2s;
+  }
+  .search-box input:focus {
+    border-color: var(--sun);
+    width: 280px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    width: 16px;
+    height: 16px;
+    fill: var(--muted);
+    pointer-events: none;
+  }
+
   .crumb{
     font-family:'Barlow Condensed',sans-serif;
     text-transform:uppercase;
@@ -342,7 +376,6 @@
   </svg>
   <div class="header-top">
     <div class="brand-container">
-      <!-- Modern SVG Weather Logo -->
       <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="12" cy="12" r="5" fill="var(--sun)" />
         <path d="M12 2V4M12 20V22M2 12H4M20 12H22M4.929 4.929L6.343 6.343M17.657 17.657L19.071 19.071M4.929 19.071L6.343 17.657M17.657 6.343L19.071 4.929" stroke="var(--sky)" stroke-width="2" stroke-linecap="round"/>
@@ -373,7 +406,13 @@
   </div>
 </header>
 
-<nav class="navbar" id="breadcrumb"></nav>
+<nav class="navbar">
+  <div class="breadcrumb-group" id="breadcrumb"></div>
+  <div class="search-box">
+    <svg class="search-icon" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+    <input type="text" id="searchInput" placeholder="Filter territories..." oninput="handleSearch(this.value)">
+  </div>
+</nav>
 
 <div class="controls">
   <span class="count mono" id="count"></span>
@@ -416,9 +455,7 @@ function applyGoogleKey(){
   document.getElementById('sourceLabel').textContent = 'SOURCE: GOOGLE WEATHER';
   document.getElementById('sourceToggle').textContent = 'CHANGE SOURCE →';
   document.getElementById('sourcePanel').classList.remove('show');
-  if(currentLevel==='countries') renderCountryGrid(currentItems);
-  if(currentLevel==='states') renderStateGrid(currentItems);
-  if(currentLevel==='cities') renderCityGrid(currentItems);
+  reRenderCurrentView();
 }
 function clearGoogleKey(){
   GOOGLE_API_KEY = null;
@@ -426,9 +463,13 @@ function clearGoogleKey(){
   document.getElementById('sourceLabel').textContent = 'SOURCE: OPEN‑METEO (no key needed)';
   document.getElementById('sourceToggle').textContent = 'USE GOOGLE WEATHER →';
   document.getElementById('sourcePanel').classList.remove('show');
-  if(currentLevel==='countries') renderCountryGrid(currentItems);
-  if(currentLevel==='states') renderStateGrid(currentItems);
-  if(currentLevel==='cities') renderCityGrid(currentItems);
+  reRenderCurrentView();
+}
+function reRenderCurrentView(){
+  const query = document.getElementById('searchInput').value;
+  if(currentLevel==='countries') renderCountryGrid(filterItems(ALL_COUNTRIES, query));
+  else if(currentLevel==='states') renderStateGrid(filterItems(currentItems, query));
+  else if(currentLevel==='cities') renderCityGrid(filterItems(currentItems, query));
 }
 function googleConditionMeta(type){
   const t = (type||'').toUpperCase();
@@ -778,6 +819,30 @@ async function geocode(name, countryCode){
   return data.results[0];
 }
 
+/* ===================== SEARCH FILTER LOGIC ===================== */
+function handleSearch(query) {
+  const q = query.toLowerCase().trim();
+  if(currentLevel === 'countries') {
+    const filtered = ALL_COUNTRIES.filter(c => c.name.toLowerCase().includes(q));
+    renderCountryGrid(filtered);
+  } else if(currentLevel === 'states') {
+    const filtered = currentItems.filter(s => s.name.toLowerCase().includes(q));
+    renderStateGrid(filtered);
+  } else if(currentLevel === 'cities') {
+    const filtered = currentItems.filter(c => c.name.toLowerCase().includes(q));
+    renderCityGrid(filtered);
+  }
+}
+
+function filterItems(items, query) {
+  if(!query) return items;
+  const q = query.toLowerCase().trim();
+  return items.filter(item => {
+    const name = item.name || item.n || '';
+    return name.toLowerCase().includes(q);
+  });
+}
+
 /* ===================== RENDER: BREADCRUMB ===================== */
 function renderBreadcrumb(){
   const bc = document.getElementById('breadcrumb');
@@ -795,6 +860,7 @@ function renderBreadcrumb(){
 /* ===================== LEVEL 1: COUNTRIES ===================== */
 function loadCountries(){
   currentLevel = 'countries'; ctx.country=null; ctx.state=null;
+  document.getElementById('searchInput').value = '';
   closeDetail();
   renderBreadcrumb();
   document.getElementById('empty').style.display='none';
@@ -831,6 +897,7 @@ function renderCountryGrid(items){
 async function loadStates(country){
   if(!country) return;
   currentLevel='states'; ctx.country=country; ctx.state=null;
+  document.getElementById('searchInput').value = '';
   closeDetail();
   renderBreadcrumb();
   const grid = document.getElementById('grid');
@@ -888,6 +955,7 @@ function renderStateGrid(items){
 /* ===================== LEVEL 3: CITIES / VILLAGES ===================== */
 async function loadCities(country, state){
   currentLevel='cities'; ctx.country=country; ctx.state=state;
+  document.getElementById('searchInput').value = '';
   closeDetail();
   renderBreadcrumb();
   const grid = document.getElementById('grid');
