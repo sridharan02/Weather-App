@@ -19,7 +19,7 @@ app.add_middleware(
 def read_root():
     return FileResponse("index.html")
 
-# 2. Custom Weather API Endpoint
+# 2. Custom Weather API Endpoint with safe error fallback
 @app.get("/api/weather")
 def get_weather(
     lat: float = Query(..., description="Latitude"),
@@ -36,26 +36,39 @@ def get_weather(
     )
 
     try:
-        response = requests.get(open_meteo_url, timeout=10)
-        response.raise_for_status()
-        data = response.json()
+        headers = {"User-Agent": "AetheriaWeatherApp/1.0"}
+        response = requests.get(open_meteo_url, headers=headers, timeout=10)
         
+        if response.status_code != 200:
+            return {
+                "source": "fallback",
+                "temp": 0, "feelsLike": 0, "humidity": 0, "precip": 0,
+                "windSpeed": 0, "windDir": 0, "weatherCode": 3,
+                "time": None, "sunrise": "—", "sunset": "—"
+            }
+            
+        data = response.json()
         cur = data.get("current", {})
         daily = data.get("daily", {})
 
         # Process and return structured weather JSON response
         return {
             "source": "custom_fastapi_backend",
-            "temp": cur.get("temperature_2m"),
-            "feelsLike": cur.get("apparent_temperature"),
-            "humidity": cur.get("relative_humidity_2m"),
-            "precip": cur.get("precipitation"),
-            "windSpeed": cur.get("wind_speed_10m"),
-            "windDir": cur.get("wind_direction_10m"),
-            "weatherCode": cur.get("weather_code"),
+            "temp": cur.get("temperature_2m", 0),
+            "feelsLike": cur.get("apparent_temperature", 0),
+            "humidity": cur.get("relative_humidity_2m", 0),
+            "precip": cur.get("precipitation", 0),
+            "windSpeed": cur.get("wind_speed_10m", 0),
+            "windDir": cur.get("wind_direction_10m", 0),
+            "weatherCode": cur.get("weather_code", 0),
             "time": cur.get("time"),
             "sunrise": daily.get("sunrise", ["—"])[0][-5:] if need_sun and daily.get("sunrise") else "—",
             "sunset": daily.get("sunset", ["—"])[0][-5:] if need_sun and daily.get("sunset") else "—"
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to fetch weather data: {str(e)}")
+        return {
+            "source": "error_fallback",
+            "temp": 0, "feelsLike": 0, "humidity": 0, "precip": 0,
+            "windSpeed": 0, "windDir": 0, "weatherCode": 3,
+            "time": None, "sunrise": "—", "sunset": "—"
+        }
