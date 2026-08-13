@@ -888,9 +888,13 @@ function renderCountryGrid(items){
     </div>
   `).join('');
 
-  items.forEach((c,i) => loadCardWeather(`c-country-${i}`, c.lat, c.lon));
+  // Stagger requests by 50ms each so Open-Meteo doesn't block the flood of requests
+  items.forEach((c,i) => {
+    setTimeout(() => {
+      loadCardWeather(`c-country-${i}`, c.lat, c.lon);
+    }, i * 50); 
+  });
 }
-
 /* ===================== LEVEL 2: STATES ===================== */
 async function loadStates(country){
   if(!country) return;
