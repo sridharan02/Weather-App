@@ -226,7 +226,7 @@
     font-size:14px;
     font-weight: 600;
     padding:8px 16px;
-    border-radius:6px;
+    border-radius:6px;  
     cursor:pointer;
     transition: all 0.2s;
   }
@@ -740,30 +740,33 @@ async function fetchWeather(lat, lon, needSun){
 }
 
 async function fetchOpenMeteoWeather(lat, lon, needSun){
-  const url = `/api/weather?lat=${lat}&lon=${lon}&need_sun=${needSun}`;
+  const dailyParam = needSun ? "&daily=sunrise,sunset" : "";
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m${dailyParam}&timezone=auto`;
+  
   const res = await fetch(url);
   if(!res.ok) throw new Error('Weather fetch failed');
   const data = await res.json();
-  const m = weatherMeta(data.weatherCode);
+  const cur = data.current || {};
+  const daily = data.daily || {};
+  const m = weatherMeta(cur.weather_code);
   
   return {
-    source: 'custom_api',
-    temp: data.temp,
-    feelsLike: data.feelsLike,
-    humidity: data.humidity,
-    precip: data.precip,
-    windSpeed: data.windSpeed,
-    windDir: data.windDir,
+    source: 'direct_open_meteo',
+    temp: cur.temperature_2m,
+    feelsLike: cur.apparent_temperature,
+    humidity: cur.relative_humidity_2m,
+    precip: cur.precipitation,
+    windSpeed: cur.wind_speed_10m,
+    windDir: cur.wind_direction_10m,
     label: m.label,
     color: m.color,
     iconSvg: m.svg,
     iconUrl: null,
-    time: data.time,
-    sunrise: data.sunrise,
-    sunset: data.sunset
+    time: cur.time,
+    sunrise: daily.sunrise ? daily.sunrise[0].slice(11,16) : '—',
+    sunset: daily.sunset ? daily.sunset[0].slice(11,16) : '—'
   };
 }
-
 async function fetchGoogleWeather(lat, lon, needSun){
   const url = `https://weather.googleapis.com/v1/currentConditions:lookup?key=${GOOGLE_API_KEY}&location.latitude=${lat}&location.longitude=${lon}`;
   const res = await fetch(url);
